@@ -110,44 +110,60 @@ export default function FavoriteScreen() {
       {/* 
         FlatList to Display Favorite Recipes
         Renders each recipe in a card format with image and title
+        Supports both regular recipes and custom recipes
       */}
       <FlatList
         data={favoriteRecipesList}
-        keyExtractor={(item) => item.idFood}
+        keyExtractor={(item, index) => item.idFood || item.title || index.toString()}
         contentContainerStyle={styles.listContentContainer}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.cardContainer}
-            onPress={() => navigation.navigate('RecipeDetail', item)}
-          >
-            {/* Recipe Thumbnail Image */}
-            <Image
-              source={{ uri: item.recipeImage }}
-              style={styles.recipeImage}
-            />
-            
-            {/* Recipe Information Container */}
-            <View style={{ flex: 1 }}>
-              {/* Recipe Title */}
-              <Text style={styles.recipeTitle}>
-                {item.recipeName?.length > 20 
-                  ? item.recipeName.slice(0, 20) + '...' 
-                  : item.recipeName
+        renderItem={({ item }) => {
+          // Determine if it's a custom recipe or regular recipe
+          const isCustomRecipe = !item.idFood;
+          const recipeImage = item.recipeImage || item.image;
+          const recipeName = item.recipeName || item.title;
+          const recipeCategory = item.category || "Custom Recipe";
+          
+          return (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              onPress={() => {
+                // Navigate to appropriate screen based on recipe type
+                if (isCustomRecipe) {
+                  navigation.navigate('CustomRecipesScreen', { recipe: item });
+                } else {
+                  navigation.navigate('RecipeDetail', item);
                 }
-              </Text>
+              }}
+            >
+              {/* Recipe Thumbnail Image */}
+              <Image
+                source={{ uri: recipeImage }}
+                style={styles.recipeImage}
+              />
               
-              {/* Recipe Category */}
-              <Text style={{ 
-                fontSize: hp(1.6), 
-                color: '#9CA3AF',
-                marginTop: 4 
-              }}>
-                {item.category}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
+              {/* Recipe Information Container */}
+              <View style={{ flex: 1 }}>
+                {/* Recipe Title */}
+                <Text style={styles.recipeTitle}>
+                  {recipeName?.length > 20 
+                    ? recipeName.slice(0, 20) + '...' 
+                    : recipeName
+                  }
+                </Text>
+                
+                {/* Recipe Category */}
+                <Text style={{ 
+                  fontSize: hp(1.6), 
+                  color: '#9CA3AF',
+                  marginTop: 4 
+                }}>
+                  {recipeCategory}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
       />
     </>
   );
