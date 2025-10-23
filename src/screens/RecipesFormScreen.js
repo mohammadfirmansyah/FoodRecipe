@@ -1,47 +1,108 @@
-import { View,Text,TextInput,TouchableOpacity,Image,StyleSheet,} from "react-native";
-import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {widthPercentageToDP as wp,heightPercentageToDP as hp,} from "react-native-responsive-screen";
+/**
+ * RECIPES FORM SCREEN - Add/Edit Recipe Form
+ * Form interface for creating new recipes or editing existing ones.
+ * Collects title, image URL, and description from the user.
+ */
 
+// Core React Native components
+import { 
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
+import React, { useState } from "react";
+
+// AsyncStorage for local data persistence
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Responsive sizing utilities
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+/**
+ * RecipesFormScreen Component
+ * @param {Object} route - Contains navigation params (edit mode data)
+ * @param {Object} navigation - Navigation object for screen transitions
+ */
 export default function RecipesFormScreen({ route, navigation }) {
+  // Extract params: if editing, get recipe data and callback
   const { recipeToEdit, recipeIndex, onrecipeEdited } = route.params || {};
-  const [title, setTitle] = useState(recipeToEdit ? recipeToEdit.title : "");
-  const [image, setImage] = useState(recipeToEdit ? recipeToEdit.image : "");
+  
+  // Form state: pre-fill if editing, empty if creating new
+  const [title, setTitle] = useState(
+    recipeToEdit ? recipeToEdit.title : ""
+  );
+  const [image, setImage] = useState(
+    recipeToEdit ? recipeToEdit.image : ""
+  );
   const [description, setDescription] = useState(
     recipeToEdit ? recipeToEdit.description : ""
   );
 
+  /**
+   * Save Recipe Function
+   * Handles both creating new recipes and updating existing ones
+   * Stores data in AsyncStorage for persistence
+   */
   const saverecipe = async () => {
- 
+    // TODO: Validate input fields
+    // TODO: Create recipe object with form data
+    // TODO: Retrieve existing recipes from AsyncStorage
+    // TODO: Add new or update existing recipe in array
+    // TODO: Save back to AsyncStorage
+    // TODO: Navigate back to previous screen
   };
 
   return (
     <View style={styles.container}>
+      {/* Title Input Field */}
       <TextInput
         placeholder="Title"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
       />
+      
+      {/* Image URL Input Field */}
       <TextInput
         placeholder="Image URL"
         value={image}
         onChangeText={setImage}
         style={styles.input}
       />
+      
+      {/* 
+        Image Preview
+        Shows image if URL is provided, placeholder if empty
+      */}
       {image ? (
         <Image source={{ uri: image }} style={styles.image} />
       ) : (
         <Text style={styles.imagePlaceholder}>Upload Image URL</Text>
       )}
+      
+      {/* 
+        Description Input Field
+        Multiline for longer text entry
+      */}
       <TextInput
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
         multiline={true}
         numberOfLines={4}
-        style={[styles.input, { height: hp(20), textAlignVertical: "top" }]}
+        style={[
+          styles.input, 
+          { height: hp(20), textAlignVertical: "top" }
+        ]}
       />
+      
+      {/* Save Button */}
       <TouchableOpacity onPress={saverecipe} style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Save recipe</Text>
       </TouchableOpacity>
@@ -49,23 +110,31 @@ export default function RecipesFormScreen({ route, navigation }) {
   );
 }
 
+/**
+ * Styles for Recipe Form
+ * Clean, simple form layout with consistent spacing
+ */
 const styles = StyleSheet.create({
+  // Main container with padding
   container: {
     flex: 1,
     padding: wp(4),
   },
+  // Text input field styling
   input: {
     marginTop: hp(4),
     borderWidth: 1,
     borderColor: "#ddd",
-    padding: wp(.5),
+    padding: wp(0.5),
     marginVertical: hp(1),
   },
+  // Preview image styling
   image: {
     width: 300,
-    height:200,
+    height: 200,
     margin: wp(2),
   },
+  // Placeholder text for empty image
   imagePlaceholder: {
     height: hp(20),
     justifyContent: "center",
@@ -76,13 +145,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: wp(2),
   },
+  // Save button styling with blue background
   saveButton: {
     backgroundColor: "#4F75FF",
-    padding: wp(.5),
+    padding: wp(0.5),
     alignItems: "center",
     borderRadius: 5,
     marginTop: hp(2),
   },
+  // Save button text (white, bold)
   saveButtonText: {
     color: "#fff",
     fontWeight: "bold",
