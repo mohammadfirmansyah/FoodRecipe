@@ -84,11 +84,13 @@ const ArticleCard = ({ item, index, navigation }) => {
       */}
       <TouchableOpacity
         onPress={() => navigation.navigate('RecipeDetail', item)}
+        style={styles.card}
       >
-        {/* Recipe Thumbnail Image */}
+        {/* Recipe Thumbnail Image - Fixed aspect ratio for uniformity */}
         <Image
           source={{ uri: item.recipeImage }}
-          style={[styles.articleImage, { height: index % 3 === 0 ? hp(25) : hp(35) }]}
+          style={styles.articleImage}
+          resizeMode="cover"
         />
         
         {/* Recipe Name */}
@@ -135,12 +137,19 @@ const styles = StyleSheet.create({
   // Individual recipe card container
   cardContainer: {
     justifyContent: "center",
-    marginBottom: hp(1.5),
+    marginBottom: hp(2),
     flex: 1, // Allows flexible sizing in grid
   },
-  // Recipe image styling
+  // Touchable card wrapper
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 35,
+    overflow: "hidden", // Ensures image stays within rounded corners
+  },
+  // Recipe image styling with fixed aspect ratio
   articleImage: {
     width: "100%",
+    aspectRatio: 1, // Square aspect ratio (1:1) for uniform appearance
     borderRadius: 35,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
   },
