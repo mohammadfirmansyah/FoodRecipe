@@ -92,21 +92,23 @@ export default function CustomRecipesScreen() {
         style={styles.topButtonsContainer} 
         testID="topButtonsContainer"
       >
-        {/* Back Button */}
+        {/* Back Button - Navigate to previous screen */}
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Text>Back</Text>
+          <Text style={styles.backButtonText}>GoBack</Text>
         </TouchableOpacity>
         
-        {/* Favorite Toggle Button */}
+        {/* Favorite Toggle Button - Shows heart icon */}
         <TouchableOpacity
           onPress={handleToggleFavorite}
           style={styles.favoriteButton}
         >
           {/* Shows filled heart if favorited, outline if not */}
-          <Text>{isFavourite ? "♥" : "♡"}</Text>
+          <Text style={styles.favoriteButtonText}>
+            {isFavourite ? "♥" : "♡"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -192,12 +194,23 @@ const styles = StyleSheet.create({
     marginLeft: wp(5),
     backgroundColor: "white",
   },
+  // Text style for back button
+  backButtonText: {
+    fontSize: hp(2),
+    fontWeight: "bold",
+    color: "#4B5563",
+  },
   // Circular favorite button (white background)
   favoriteButton: {
     padding: 8,
     borderRadius: 50,
     marginRight: wp(5),
     backgroundColor: "white",
+  },
+  // Text style for favorite button (heart symbol)
+  favoriteButtonText: {
+    fontSize: hp(3),
+    color: "#f43f5e",
   },
   // Recipe description text
   contentText: {
