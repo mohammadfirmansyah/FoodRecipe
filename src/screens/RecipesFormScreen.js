@@ -49,6 +49,18 @@ export default function RecipesFormScreen({ route, navigation }) {
   const [instructions, setInstructions] = useState(
     recipeToEdit ? recipeToEdit.description : ""
   );
+  const [prepTime, setPrepTime] = useState(
+    recipeToEdit ? recipeToEdit.prepTime : ""
+  );
+  const [servings, setServings] = useState(
+    recipeToEdit ? recipeToEdit.servings : ""
+  );
+  const [calories, setCalories] = useState(
+    recipeToEdit ? recipeToEdit.calories : ""
+  );
+  const [difficulty, setDifficulty] = useState(
+    recipeToEdit ? recipeToEdit.difficulty : ""
+  );
 
   /**
    * Save Recipe Function
@@ -57,9 +69,9 @@ export default function RecipesFormScreen({ route, navigation }) {
    */
   const saverecipe = async () => {
     try {
-      // Validate input fields
+      // Validate required fields
       if (!recipeName.trim() || !imageUrl.trim() || !ingredients.trim() || !instructions.trim()) {
-        alert('Please fill in all fields');
+        alert('Please fill in Recipe Name, Image URL, Ingredients, and Instructions');
         return;
       }
 
@@ -69,6 +81,10 @@ export default function RecipesFormScreen({ route, navigation }) {
         image: imageUrl.trim(),
         ingredients: ingredients.trim(), // Store as semicolon-separated string
         description: instructions.trim(),
+        prepTime: prepTime.trim() || "30 Mins", // Default value if empty
+        servings: servings.trim() || "2 Servings",
+        calories: calories.trim() || "100 Cal",
+        difficulty: difficulty.trim() || "Medium",
       };
 
       // Retrieve existing recipes from AsyncStorage
@@ -182,6 +198,64 @@ export default function RecipesFormScreen({ route, navigation }) {
           />
         </View>
         
+        {/* Recipe Metadata Section */}
+        <View style={styles.metadataContainer}>
+          <Text style={styles.sectionLabel}>Recipe Information</Text>
+          
+          {/* Two columns layout for metadata */}
+          <View style={styles.metadataRow}>
+            {/* Preparation Time */}
+            <View style={styles.metadataInputContainer}>
+              <Text style={styles.label}>Prep Time</Text>
+              <TextInput
+                placeholder="30 Mins"
+                value={prepTime}
+                onChangeText={setPrepTime}
+                style={styles.input}
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+            
+            {/* Servings */}
+            <View style={styles.metadataInputContainer}>
+              <Text style={styles.label}>Servings</Text>
+              <TextInput
+                placeholder="2 Servings"
+                value={servings}
+                onChangeText={setServings}
+                style={styles.input}
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+          </View>
+          
+          <View style={styles.metadataRow}>
+            {/* Calories */}
+            <View style={styles.metadataInputContainer}>
+              <Text style={styles.label}>Calories</Text>
+              <TextInput
+                placeholder="100 Cal"
+                value={calories}
+                onChangeText={setCalories}
+                style={styles.input}
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+            
+            {/* Difficulty */}
+            <View style={styles.metadataInputContainer}>
+              <Text style={styles.label}>Difficulty</Text>
+              <TextInput
+                placeholder="Easy/Medium/Hard"
+                value={difficulty}
+                onChangeText={setDifficulty}
+                style={styles.input}
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+          </View>
+        </View>
+        
         {/* Instructions Input */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Step-by-Step Instructions *</Text>
@@ -274,6 +348,31 @@ const styles = StyleSheet.create({
     height: hp(15),
     textAlignVertical: "top",
     paddingTop: hp(1.5),
+  },
+  // Metadata section container
+  metadataContainer: {
+    marginBottom: hp(2.5),
+    backgroundColor: "#F3F4F6",
+    padding: wp(4),
+    borderRadius: 12,
+  },
+  // Section label for metadata
+  sectionLabel: {
+    fontSize: hp(2.2),
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: hp(1.5),
+  },
+  // Row container for 2-column layout
+  metadataRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: hp(1),
+  },
+  // Individual metadata input (half width)
+  metadataInputContainer: {
+    flex: 1,
+    marginHorizontal: wp(1),
   },
   // Image preview container with max width
   imagePreviewContainer: {

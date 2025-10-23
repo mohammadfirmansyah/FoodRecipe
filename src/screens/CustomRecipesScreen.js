@@ -97,7 +97,7 @@ export default function CustomRecipesScreen() {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Text style={styles.backButtonText}>GoBack</Text>
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         
         {/* Favorite Toggle Button - Shows heart icon */}
@@ -116,6 +116,43 @@ export default function CustomRecipesScreen() {
       <View style={styles.contentContainer} testID="contentContainer">
         {/* Recipe Title */}
         <Text style={styles.recipeTitle}>{recipe.title}</Text>
+        
+        {/* Recipe Category - if available */}
+        {recipe.category && (
+          <Text style={styles.recipeCategory}>{recipe.category}</Text>
+        )}
+        
+        {/* Miscellaneous Info (time, servings, calories, difficulty) */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.miscScrollContent}
+          style={styles.miscScrollContainer}
+        >
+          {/* Time */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>🕒</Text>
+            <Text style={styles.miscText}>{recipe.prepTime || "30 Mins"}</Text>
+          </View>
+          
+          {/* Servings */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>👥</Text>
+            <Text style={styles.miscText}>{recipe.servings || "2 Servings"}</Text>
+          </View>
+          
+          {/* Calories */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>🔥</Text>
+            <Text style={styles.miscText}>{recipe.calories || "100 Cal"}</Text>
+          </View>
+          
+          {/* Difficulty Level */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>🎚️</Text>
+            <Text style={styles.miscText}>{recipe.difficulty || "Medium"}</Text>
+          </View>
+        </ScrollView>
         
         {/* Ingredients Section - Parse semicolon-separated list */}
         {recipe.ingredients && (
@@ -159,13 +196,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-  // Large recipe image with rounded bottom corners
+  // Large recipe image matching RecipeDetailScreen
   recipeImage: {
     width: wp(98),
-    height: hp(50),
-    borderRadius: 35,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
+    height: hp(45), // Match RecipeDetailScreen
+    borderRadius: 20,
     marginTop: 4,
   },
   // Content area below image
@@ -173,12 +208,52 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(4),
     paddingTop: hp(4),
   },
-  // Large bold recipe title
+  // Large bold recipe title - matching RecipeDetailScreen
   recipeTitle: {
-    fontSize: hp(3),
+    fontSize: hp(4),
     fontWeight: "bold",
-    color: "#4B5563",
+    color: "#333",
+    textAlign: "center",
+    marginVertical: 10,
+  },
+  // Recipe category text
+  recipeCategory: {
+    fontSize: hp(2),
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  // Horizontal scroll container for misc info
+  miscScrollContainer: {
     marginBottom: hp(2),
+  },
+  // Content wrapper with padding for horizontal scroll
+  miscScrollContent: {
+    paddingHorizontal: wp(4),
+    gap: 12,
+  },
+  // Individual metadata item with min width
+  miscItem: {
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    paddingVertical: hp(1.5),
+    paddingHorizontal: wp(4),
+    borderRadius: 12,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    minWidth: 100,
+  },
+  miscIcon: {
+    fontSize: hp(3.5),
+    marginBottom: 5,
+  },
+  miscText: {
+    fontSize: hp(1.5),
+    fontWeight: "600",
+    color: "#333",
   },
   // Section container with spacing
   sectionContainer: {
@@ -222,29 +297,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: hp(4),
   },
-  // Circular back button (white background)
+  // Circular back button - matching RecipeDetailScreen
   backButton: {
-    padding: 8,
-    borderRadius: 50,
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: "#f0f0f0",
     marginLeft: wp(5),
-    backgroundColor: "white",
   },
   // Text style for back button
   backButtonText: {
     fontSize: hp(2),
     fontWeight: "bold",
-    color: "#4B5563",
+    color: "#333",
   },
-  // Circular favorite button (white background)
+  // Circular favorite button - matching RecipeDetailScreen (larger)
   favoriteButton: {
-    padding: 8,
+    padding: hp(2),
     borderRadius: 50,
-    marginRight: wp(5),
     backgroundColor: "white",
+    marginRight: wp(5),
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   // Text style for favorite button (heart symbol)
   favoriteButtonText: {
-    fontSize: hp(3),
+    fontSize: hp(4), // Larger heart icon
     color: "#f43f5e",
   },
   // Recipe description text
