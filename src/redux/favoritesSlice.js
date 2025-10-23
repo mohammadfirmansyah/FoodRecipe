@@ -24,8 +24,28 @@ const favoritesSlice = createSlice({
   name: "favorites",
   initialState,
   reducers: {
-    // TODO: Add toggleFavorite reducer to add/remove recipes
-    // This will handle the logic for favoriting/unfavoriting
+    /**
+     * Toggle Favorite Reducer
+     * Adds recipe to favorites if not present, removes if already favorited
+     * @param {Object} state - Current Redux state
+     * @param {Object} action - Action with recipe payload
+     */
+    toggleFavorite: (state, action) => {
+      const recipe = action.payload;
+      
+      // Check if recipe already exists in favorites by comparing idFood
+      const existingIndex = state.favoriterecipes.findIndex(
+        (item) => item.idFood === recipe.idFood
+      );
+      
+      if (existingIndex >= 0) {
+        // Recipe exists - Remove it from favorites
+        state.favoriterecipes.splice(existingIndex, 1);
+      } else {
+        // Recipe doesn't exist - Add it to favorites
+        state.favoriterecipes.push(recipe);
+      }
+    },
   },
 });
 
