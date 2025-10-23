@@ -117,9 +117,22 @@ export default function CustomRecipesScreen() {
         {/* Recipe Title */}
         <Text style={styles.recipeTitle}>{recipe.title}</Text>
         
-        {/* Recipe Description Section */}
+        {/* Ingredients Section - Parse semicolon-separated list */}
+        {recipe.ingredients && (
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Ingredients</Text>
+            {recipe.ingredients.split(';').map((ingredient, index) => (
+              <View key={index} style={styles.ingredientItem}>
+                <View style={styles.ingredientBullet} />
+                <Text style={styles.ingredientText}>{ingredient.trim()}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+        
+        {/* Instructions Section */}
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Content</Text>
+          <Text style={styles.sectionTitle}>Instructions</Text>
           <Text style={styles.contentText}>{recipe.description}</Text>
         </View>
       </View>
@@ -171,12 +184,34 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginBottom: hp(2),
   },
-  // Section heading (e.g., "Content")
+  // Section heading (e.g., "Ingredients", "Instructions")
   sectionTitle: {
     fontSize: hp(2.5),
     fontWeight: "bold",
     color: "#4B5563",
     marginBottom: hp(1),
+  },
+  // Individual ingredient item container
+  ingredientItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: hp(1),
+    paddingLeft: wp(2),
+  },
+  // Bullet point for ingredients
+  ingredientBullet: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#F59E0B",
+    marginTop: hp(0.8),
+    marginRight: wp(2),
+  },
+  // Ingredient text styling
+  ingredientText: {
+    fontSize: hp(1.8),
+    color: "#4B5563",
+    flex: 1,
   },
   // Positioned buttons overlay on image
   topButtonsContainer: {
