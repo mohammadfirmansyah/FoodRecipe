@@ -50,12 +50,49 @@ export default function RecipesFormScreen({ route, navigation }) {
    * Stores data in AsyncStorage for persistence
    */
   const saverecipe = async () => {
-    // TODO: Validate input fields
-    // TODO: Create recipe object with form data
-    // TODO: Retrieve existing recipes from AsyncStorage
-    // TODO: Add new or update existing recipe in array
-    // TODO: Save back to AsyncStorage
-    // TODO: Navigate back to previous screen
+    try {
+      // Validate input fields
+      if (!title.trim() || !image.trim() || !description.trim()) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      // Create recipe object with form data
+      const newrecipe = {
+        title: title.trim(),
+        image: image.trim(),
+        description: description.trim(),
+      };
+
+      // Retrieve existing recipes from AsyncStorage
+      const existingRecipes = await AsyncStorage.getItem("customrecipes");
+      
+      // Parse retrieved data or start with empty array
+      let recipes = existingRecipes ? JSON.parse(existingRecipes) : [];
+
+      if (recipeToEdit) {
+        // Update existing recipe at specific index
+        recipes[recipeIndex] = newrecipe;
+        
+        // Notify parent component about the edit
+        if (onrecipeEdited) {
+          onrecipeEdited();
+        }
+      } else {
+        // Add new recipe to array
+        recipes.push(newrecipe);
+      }
+
+      // Save updated array back to AsyncStorage
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(recipes));
+
+      // Navigate back to previous screen
+      navigation.goBack();
+    } catch (error) {
+      // Log any errors that occur during save process
+      console.error('Error saving recipe:', error);
+      alert('Failed to save recipe. Please try again.');
+    }
   };
 
   return (
