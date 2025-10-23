@@ -111,7 +111,13 @@ export default function RecipeDetailScreen(props) {
         </View>
         
         {/* Miscellaneous Info (time, servings, calories, difficulty) */}
-        <View style={styles.miscContainer} testID="miscContainer">
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.miscScrollContent}
+          style={styles.miscScrollContainer}
+          testID="miscContainer"
+        >
           {/* Time */}
           <View style={styles.miscItem}>
             <Text style={styles.miscIcon}>🕒</Text>
@@ -135,7 +141,7 @@ export default function RecipeDetailScreen(props) {
             <Text style={styles.miscIcon}>🎚️</Text>
             <Text style={styles.miscText}>Medium</Text>
           </View>
-        </View>
+        </ScrollView>
 
         {/* Ingredients Section */}
         <View style={styles.sectionContainer}>
@@ -212,15 +218,21 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "bold",
   },
-  // Circular favorite button
+  // Circular favorite button - larger size
   favoriteButton: {
-    padding: 10,
-    borderRadius: 20,
+    padding: hp(2),
+    borderRadius: 50,
+    backgroundColor: "white",
     marginRight: wp(5),
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   favoriteButtonText: {
-    fontSize: hp(2),
-    color: "red",
+    fontSize: hp(4), // Larger heart icon
+    color: "#f43f5e",
   },
   // Content area below image
   contentContainer: {
@@ -258,21 +270,35 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: "Roboto",
   },
-  // Container for metadata icons (time, servings)
+  // Horizontal scroll container for misc info
+  miscScrollContainer: {
+    marginBottom: hp(2),
+  },
+  // Content wrapper with padding for horizontal scroll
+  miscScrollContent: {
+    paddingHorizontal: wp(4), // Consistent padding with other elements
+    gap: 12, // Space between items
+  },
+  // Container for metadata icons (time, servings) - deprecated, replaced by scroll
   miscContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 20,
     paddingHorizontal: wp(4),
   },
-  // Individual metadata item
+  // Individual metadata item with min width for scrollability
   miscItem: {
     alignItems: "center",
     backgroundColor: "#F5F5F5",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
+    paddingVertical: hp(1.5),
+    paddingHorizontal: wp(4),
+    borderRadius: 12,
     elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    minWidth: 100, // Minimum width to ensure consistent size
   },
   miscIcon: {
     fontSize: hp(3.5),
