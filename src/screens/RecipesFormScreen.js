@@ -97,6 +97,19 @@ export default function RecipesFormScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Back Button - Cancel form and return to previous screen */}
+      <TouchableOpacity 
+        onPress={() => navigation.goBack()} 
+        style={styles.backButton}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+
+      {/* Form Title */}
+      <Text style={styles.formTitle}>
+        {recipeToEdit ? "Edit Recipe" : "Add New Recipe"}
+      </Text>
+
       {/* Title Input Field */}
       <TextInput
         placeholder="Title"
@@ -156,6 +169,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: wp(4),
+    backgroundColor: "#F9FAFB",
+  },
+  // Back button at top left
+  backButton: {
+    marginBottom: hp(1),
+    marginTop: hp(1),
+  },
+  backButtonText: {
+    fontSize: hp(2.5),
+    color: "#4F75FF",
+    fontWeight: "600",
+  },
+  // Form title (Add/Edit Recipe)
+  formTitle: {
+    fontSize: hp(3),
+    fontWeight: "bold",
+    color: "#111827",
+    marginBottom: hp(2),
+    textAlign: "center",
   },
   // Text input field styling
   input: {
