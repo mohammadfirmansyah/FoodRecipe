@@ -82,9 +82,10 @@ export default function FavoriteScreen() {
           style={{ 
             fontSize: hp(3.8), 
             marginTop: hp(4), 
-            marginLeft: 20 
+            marginLeft: 20,
+            fontWeight: '600',
+            color: '#52525B',
           }}
-          className="font-semibold text-neutral-600"
         >
           My Favorite Recipes
         </Text>
@@ -106,8 +107,48 @@ export default function FavoriteScreen() {
         <Text style={{ color: "#fff" }}>Go back</Text>
       </TouchableOpacity>
     
-      {/* TODO: Add FlatList to display favorite recipes */}
-      {/* TODO: Each item should show image, title, and be clickable */}
+      {/* 
+        FlatList to Display Favorite Recipes
+        Renders each recipe in a card format with image and title
+      */}
+      <FlatList
+        data={favoriteRecipesList}
+        keyExtractor={(item) => item.idFood}
+        contentContainerStyle={styles.listContentContainer}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.cardContainer}
+            onPress={() => navigation.navigate('RecipeDetail', item)}
+          >
+            {/* Recipe Thumbnail Image */}
+            <Image
+              source={{ uri: item.recipeImage }}
+              style={styles.recipeImage}
+            />
+            
+            {/* Recipe Information Container */}
+            <View style={{ flex: 1 }}>
+              {/* Recipe Title */}
+              <Text style={styles.recipeTitle}>
+                {item.recipeName?.length > 20 
+                  ? item.recipeName.slice(0, 20) + '...' 
+                  : item.recipeName
+                }
+              </Text>
+              
+              {/* Recipe Category */}
+              <Text style={{ 
+                fontSize: hp(1.6), 
+                color: '#9CA3AF',
+                marginTop: 4 
+              }}>
+                {item.category}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
     </>
   );
 }
