@@ -14,13 +14,13 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 // AsyncStorage for local data persistence
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Navigation hook
-import { useNavigation } from "@react-navigation/native";
+// Navigation hooks
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // Responsive sizing utilities
 import {
@@ -40,29 +40,36 @@ export default function MyRecipeScreen() {
   const [loading, setLoading] = useState(true);
 
   /**
-   * useEffect - Load recipes on component mount
-   * Fetches saved recipes from AsyncStorage
+   * useFocusEffect - Reload recipes every time screen comes into focus
+   * Ensures data is always up-to-date after adding/editing recipes
    */
-  useEffect(() => {
-    const fetchrecipes = async () => {
-      try {
-        // Retrieve recipes from AsyncStorage using key "customrecipes"
-        const storedrecipes = await AsyncStorage.getItem("customrecipes");
-        
-        // Check if recipes exist, parse JSON and update state
-        if (storedrecipes) {
-          setrecipes(JSON.parse(storedrecipes));
+  useFocusEffect(
+    useCallback(() => {
+      const fetchrecipes = async () => {
+        try {
+          setLoading(true); // Show loading indicator
+          
+          // Retrieve recipes from AsyncStorage using key "customrecipes"
+          const storedrecipes = await AsyncStorage.getItem("customrecipes");
+          
+          // Check if recipes exist, parse JSON and update state
+          if (storedrecipes) {
+            setrecipes(JSON.parse(storedrecipes));
+          } else {
+            // If no recipes, set empty array
+            setrecipes([]);
+          }
+        } catch (error) {
+          console.error("Error fetching recipes:", error);
+        } finally {
+          // Set loading to false after fetch completes
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching recipes:", error);
-      } finally {
-        // Set loading to false after fetch completes
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchrecipes();
-  }, []); // Runs once on mount
+      fetchrecipes();
+    }, []) // Empty dependency array means this runs on every focus
+  );
 
   /**
    * Handle Add Recipe
