@@ -107,7 +107,7 @@ export default function Categories({
               {/* Category image with dynamic styling */}
               <View style={[styles.imageContainer, activeButtonStyle]}>
                 <Image
-                  source={{ uri: cat.strCategoryThumb }}
+                  source={cat.strCategoryThumb}
                   style={styles.categoryImage}
                 />
               </View>

@@ -12,9 +12,10 @@ import {
   Image, 
   StyleSheet, 
   FlatList, 
-  TouchableOpacity 
+  TouchableOpacity,
+  Dimensions 
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // Responsive screen size utilities
 import {
@@ -32,6 +33,31 @@ import { useNavigation } from "@react-navigation/native";
  */
 export default function Recipe({ categories, foods }) {
   const navigation = useNavigation();
+  const [numColumns, setNumColumns] = useState(2);
+
+  /**
+   * Calculate responsive columns based on screen width
+   * Mobile: 2 columns, Tablet: 3-4 columns, Desktop: 4+ columns
+   */
+  useEffect(() => {
+    const updateColumns = () => {
+      const width = Dimensions.get('window').width;
+      if (width >= 1200) {
+        setNumColumns(4); // Desktop - 4 columns
+      } else if (width >= 900) {
+        setNumColumns(3); // Large tablet - 3 columns
+      } else if (width >= 600) {
+        setNumColumns(3); // Tablet - 3 columns
+      } else {
+        setNumColumns(2); // Mobile - 2 columns
+      }
+    };
+
+    updateColumns();
+    const subscription = Dimensions.addEventListener('change', updateColumns);
+    
+    return () => subscription?.remove();
+  }, []);
 
   /**
    * Render function for each recipe item
@@ -45,16 +71,18 @@ export default function Recipe({ categories, foods }) {
     <View style={styles.container}>
       {/* 
         Recipe Display Grid
-        FlatList with 2 columns for efficient rendering
+        FlatList with responsive columns (2-4 depending on screen size)
       */}
       <View testID="recipesDisplay">
         <FlatList
           data={foods}
-          numColumns={2}
+          numColumns={numColumns}
+          key={`${numColumns}-columns`} // Key changes force re-render when columns change
           keyExtractor={(item) => item.idFood}
           renderItem={renderItem}
           columnWrapperStyle={styles.row}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
         />
       </View>
     </View>
@@ -72,10 +100,7 @@ export default function Recipe({ categories, foods }) {
 const ArticleCard = ({ item, index, navigation }) => {
   return (
     <View
-      style={[
-        styles.cardContainer, 
-        { paddingLeft: 20, paddingRight: 15}
-      ]} 
+      style={styles.cardContainer} 
       testID="articleDisplay"
     >
       {/* 
@@ -86,9 +111,9 @@ const ArticleCard = ({ item, index, navigation }) => {
         onPress={() => navigation.navigate('RecipeDetail', item)}
         style={styles.card}
       >
-        {/* Recipe Thumbnail Image - Fixed aspect ratio for uniformity */}
+        {/* Recipe Thumbnail Image - Fixed 4:5 aspect ratio (horizontal) */}
         <Image
-          source={{ uri: item.recipeImage }}
+          source={item.recipeImage}
           style={styles.articleImage}
           resizeMode="cover"
         />
@@ -120,61 +145,60 @@ const ArticleCard = ({ item, index, navigation }) => {
 const styles = StyleSheet.create({
   // Main container with horizontal margins matching header
   container: {
-    marginHorizontal: wp(4), // Consistent with header padding
+    marginHorizontal: wp(4), // Same padding as header
     marginTop: hp(2),
-    alignSelf: "center", // Center content on wide screens
-    width: "100%", // Full width on mobile
-    maxWidth: 1200, // Max width for large screens (tablets/web)
   },
-  // Section title styling
-  title: {
-    fontSize: hp(3),
-    fontWeight: "600",
-    color: "#52525B",
-    marginBottom: hp(1.5),
+  // Content container for list with bottom padding
+  listContent: {
+    paddingBottom: hp(4),
   },
-  // Loading state indicator position
-  loading: {
-    marginTop: hp(20),
-  },
-  // Individual recipe card container with max width
+  // Individual recipe card container with spacing
   cardContainer: {
-    justifyContent: "center",
-    marginBottom: hp(2),
     flex: 1,
-    maxWidth: 300, // Max card width for large screens
+    margin: wp(2), // Increased margin for better spacing
+    maxWidth: 400, // Max card width for large screens
+    minWidth: 140, // Min card width for small screens
   },
-  // Touchable card wrapper
+  // Touchable card wrapper with shadow
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 35,
+    borderRadius: 20,
     overflow: "hidden", // Ensures image stays within rounded corners
+    elevation: 3, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
-  // Recipe image styling with 5:4 aspect ratio
+  // Recipe image styling with 4:5 aspect ratio (horizontal rectangle)
   articleImage: {
     width: "100%",
-    aspectRatio: 5 / 4, // Portrait rectangle (5:4) for balanced appearance
-    borderRadius: 35,
+    aspectRatio: 4 / 5, // Horizontal rectangle (width:height = 4:5)
+    maxHeight: 180, // Reduced max height for more compact cards
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
+    resizeMode: 'cover', // Zoom image to fill container
   },
   // Recipe title text
   articleText: {
-    fontSize: hp(1.5),
+    fontSize: hp(1.7),
     fontWeight: "600",
     color: "#52525B",
-    marginLeft: wp(2),
-    marginTop: hp(0.5),
+    marginHorizontal: wp(3),
+    marginTop: hp(1.2),
   },
   // Recipe description text
   articleDescription: {
-    fontSize: hp(1.2),
+    fontSize: hp(1.4),
     color: "#6B7280",
-    marginLeft: wp(2),
+    marginHorizontal: wp(3),
     marginTop: hp(0.5),
+    marginBottom: hp(1.5),
   },
-  // Row layout for multiple columns with proper spacing
+  // Row layout for multiple columns
   row: {
-    justifyContent: "space-between",
-    paddingHorizontal: wp(1), // Add internal padding for better spacing
+    justifyContent: "flex-start",
+    marginBottom: hp(1),
   },
 });

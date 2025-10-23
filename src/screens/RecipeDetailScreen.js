@@ -65,7 +65,7 @@ export default function RecipeDetailScreen(props) {
       <View style={styles.imageContainer} testID="imageContainer">
         {/* Recipe Thumbnail Image */}
         <Image
-          source={{ uri: recipe.recipeImage }}
+          source={recipe.recipeImage}
           style={styles.recipeImage}
         />
       </View>
