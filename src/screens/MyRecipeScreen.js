@@ -228,14 +228,15 @@ const styles = StyleSheet.create({
     fontSize: hp(2.2),
     color: "#4F75FF",
   },
-  // Add button styling (blue, centered)
+  // Add button styling (blue, centered dynamically)
   addButton: {
     backgroundColor: "#4F75FF",
-    padding: wp(0.7),
+    paddingVertical: hp(1.5),
+    paddingHorizontal: wp(8),
     alignItems: "center",
+    alignSelf: "center", // Center horizontally
     borderRadius: 5,
-    width: 300,
-    marginLeft: 500,
+    marginBottom: hp(2),
   },
   addButtonText: {
     color: "#fff",
