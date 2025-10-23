@@ -45,10 +45,11 @@ export default function CustomRecipesScreen() {
   const favoriteRecipe = useSelector(
     (state) => state.favorites.favoriterecipes
   );
-  console.log('favoriteRecipe from custom', favoriteRecipe);
   
-  // Check if current recipe is favorited
-  const isFavourite = favoriteRecipe.includes(recipe.idCategory);
+  // Check if current recipe is favorited - use title as unique identifier
+  const isFavourite = favoriteRecipe?.some(
+    (favRecipe) => favRecipe.title === recipe.title
+  );
 
   /**
    * Handle No Recipe Data
@@ -122,48 +123,60 @@ export default function CustomRecipesScreen() {
           <Text style={styles.recipeCategory}>{recipe.category}</Text>
         )}
         
-        {/* Miscellaneous Info (time, servings, calories, difficulty) */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.miscScrollContent}
-          style={styles.miscScrollContainer}
-        >
-          {/* Time */}
-          <View style={styles.miscItem}>
-            <Text style={styles.miscIcon}>🕒</Text>
-            <Text style={styles.miscText}>{recipe.prepTime || "30 Mins"}</Text>
-          </View>
-          
-          {/* Servings */}
-          <View style={styles.miscItem}>
-            <Text style={styles.miscIcon}>👥</Text>
-            <Text style={styles.miscText}>{recipe.servings || "2 Servings"}</Text>
-          </View>
-          
-          {/* Calories */}
-          <View style={styles.miscItem}>
-            <Text style={styles.miscIcon}>🔥</Text>
-            <Text style={styles.miscText}>{recipe.calories || "100 Cal"}</Text>
-          </View>
-          
-          {/* Difficulty Level */}
-          <View style={styles.miscItem}>
-            <Text style={styles.miscIcon}>🎚️</Text>
-            <Text style={styles.miscText}>{recipe.difficulty || "Medium"}</Text>
-          </View>
-        </ScrollView>
+        {/* Miscellaneous Info - Only show if at least one field has data */}
+        {(recipe.prepTime || recipe.servings || recipe.calories || recipe.difficulty) && (
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.miscScrollContent}
+            style={styles.miscScrollContainer}
+          >
+            {/* Time - Only show if exists */}
+            {recipe.prepTime && (
+              <View style={styles.miscItem}>
+                <Text style={styles.miscIcon}>🕒</Text>
+                <Text style={styles.miscText}>{recipe.prepTime}</Text>
+              </View>
+            )}
+            
+            {/* Servings - Only show if exists */}
+            {recipe.servings && (
+              <View style={styles.miscItem}>
+                <Text style={styles.miscIcon}>👥</Text>
+                <Text style={styles.miscText}>{recipe.servings}</Text>
+              </View>
+            )}
+            
+            {/* Calories - Only show if exists */}
+            {recipe.calories && (
+              <View style={styles.miscItem}>
+                <Text style={styles.miscIcon}>🔥</Text>
+                <Text style={styles.miscText}>{recipe.calories}</Text>
+              </View>
+            )}
+            
+            {/* Difficulty Level - Only show if exists */}
+            {recipe.difficulty && (
+              <View style={styles.miscItem}>
+                <Text style={styles.miscIcon}>🎚️</Text>
+                <Text style={styles.miscText}>{recipe.difficulty}</Text>
+              </View>
+            )}
+          </ScrollView>
+        )}
         
         {/* Ingredients Section - Parse semicolon-separated list */}
         {recipe.ingredients && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Ingredients</Text>
-            {recipe.ingredients.split(';').map((ingredient, index) => (
-              <View key={index} style={styles.ingredientItem}>
-                <View style={styles.ingredientBullet} />
-                <Text style={styles.ingredientText}>{ingredient.trim()}</Text>
-              </View>
-            ))}
+            <View style={styles.ingredientsList}>
+              {recipe.ingredients.split(';').map((ingredient, index) => (
+                <View key={index} style={styles.ingredientItem}>
+                  <View style={styles.ingredientBullet} />
+                  <Text style={styles.ingredientText}>{ingredient.trim()}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         )}
         
@@ -266,26 +279,32 @@ const styles = StyleSheet.create({
     color: "#4B5563",
     marginBottom: hp(1),
   },
-  // Individual ingredient item container
+  // Ingredients list container - matching RecipeDetailScreen
+  ingredientsList: {
+    marginLeft: wp(4),
+  },
+  // Individual ingredient item - matching RecipeDetailScreen
   ingredientItem: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginBottom: hp(1),
-    paddingLeft: wp(2),
+    padding: 10,
+    backgroundColor: "#FFF9E1", // Yellow background like original
+    borderRadius: 8,
+    elevation: 2,
   },
-  // Bullet point for ingredients
+  // Bullet point for ingredients - matching RecipeDetailScreen
   ingredientBullet: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#F59E0B",
-    marginTop: hp(0.8),
+    backgroundColor: "#FFD700", // Gold color
+    borderRadius: 50,
+    height: hp(1.5),
+    width: hp(1.5),
     marginRight: wp(2),
   },
-  // Ingredient text styling
+  // Ingredient text styling - matching RecipeDetailScreen
   ingredientText: {
-    fontSize: hp(1.8),
-    color: "#4B5563",
+    fontSize: hp(1.9),
+    color: "#333",
     flex: 1,
   },
   // Positioned buttons overlay on image
