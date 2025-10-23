@@ -63,7 +63,11 @@ export default function RecipeDetailScreen(props) {
     >
       {/* Recipe Image Container */}
       <View style={styles.imageContainer} testID="imageContainer">
-        {/* TODO: Add recipe image here */}
+        {/* Recipe Thumbnail Image */}
+        <Image
+          source={{ uri: recipe.recipeImage }}
+          style={styles.recipeImage}
+        />
       </View>
 
       {/* Top Action Buttons (positioned over image) */}
@@ -73,19 +77,18 @@ export default function RecipeDetailScreen(props) {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Text>Back</Text>
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         
         {/* Favorite Toggle Button */}
         <TouchableOpacity
           onPress={handleToggleFavorite}
-          style={[
-            styles.favoriteButton,
-            { backgroundColor: "white" },
-          ]}
+          style={styles.favoriteButton}
         >
           {/* Shows filled heart if favorited, outline if not */}
-          <Text>{isFavourite ? "♥" : "♡"}</Text>
+          <Text style={styles.favoriteButtonText}>
+            {isFavourite ? "♥" : "♡"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -96,31 +99,66 @@ export default function RecipeDetailScreen(props) {
           style={styles.recipeDetailsContainer}
           testID="recipeDetailsContainer"
         >
-          <Text style={styles.recipeTitle} testID="recipeTitle">
-            {/* TODO: Display recipe title */}
+          {/* Recipe Title */}
+          <Text style={styles.mealName} testID="recipeTitle">
+            {recipe.recipeName}
           </Text>
-          <Text style={styles.recipeCategory} testID="recipeCategory">
-            {/* TODO: Display recipe category */}
+          
+          {/* Recipe Category */}
+          <Text style={styles.mealCategory} testID="recipeCategory">
+            {recipe.category}
           </Text>
         </View>
         
-        {/* Miscellaneous Info (time, servings, etc.) */}
+        {/* Miscellaneous Info (time, servings, calories, difficulty) */}
         <View style={styles.miscContainer} testID="miscContainer">
-          {/* TODO: Add recipe metadata */}
+          {/* Time */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>🕒</Text>
+            <Text style={styles.miscText}>35 Mins</Text>
+          </View>
+          
+          {/* Servings */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>👥</Text>
+            <Text style={styles.miscText}>03 Servings</Text>
+          </View>
+          
+          {/* Calories */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>🔥</Text>
+            <Text style={styles.miscText}>103 Cal</Text>
+          </View>
+          
+          {/* Difficulty Level */}
+          <View style={styles.miscItem}>
+            <Text style={styles.miscIcon}>🎚️</Text>
+            <Text style={styles.miscText}>Medium</Text>
+          </View>
         </View>
 
         {/* Ingredients Section */}
         <View style={styles.sectionContainer}>
-          {/* TODO: Add ingredients list */}
+          <Text style={styles.sectionTitle}>Ingredients</Text>
+          <View style={styles.ingredientsList} testID="ingredientsList">
+            {recipe.ingredients?.map((i, index) => (
+              <View key={index} style={styles.ingredientItem}>
+                <View style={styles.ingredientBullet} />
+                <Text style={styles.ingredientText}>
+                  {i.ingredientName} {i.measure}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
 
         {/* Instructions Section */}
         <View style={styles.sectionContainer} testID="sectionContainer">
-          {/* TODO: Add cooking instructions */}
+          <Text style={styles.sectionTitle}>Instructions</Text>
+          <Text style={styles.instructionsText}>
+            {recipe.recipeInstructions}
+          </Text>
         </View>
-        
-        {/* Description Section */}
-        {/* TODO: Add recipe description */}
       </View>
     </ScrollView>
   );
