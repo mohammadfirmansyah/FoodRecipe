@@ -118,20 +118,22 @@ const ArticleCard = ({ item, index, navigation }) => {
           resizeMode="cover"
         />
         
-        {/* Recipe Name */}
-        <Text style={styles.articleText}>
-          {item.recipeName.length > 20 
-            ? item.recipeName.slice(0, 20) + '...' 
-            : item.recipeName
-          }
+        {/* Recipe Name - Fixed 2 lines max */}
+        <Text 
+          style={styles.articleText}
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {item.recipeName}
         </Text>
         
-        {/* Recipe Description */}
-        <Text style={styles.articleDescription}>
-          {item.recipeDescription?.length > 30
-            ? item.recipeDescription.slice(0, 30) + '...'
-            : item.recipeDescription
-          }
+        {/* Recipe Description - Fixed 2 lines max */}
+        <Text 
+          style={styles.articleDescription}
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {item.recipeDescription || item.cookingDescription || ''}
         </Text>
       </TouchableOpacity>
     </View>
@@ -155,11 +157,11 @@ const styles = StyleSheet.create({
   // Individual recipe card container with spacing
   cardContainer: {
     flex: 1,
-    margin: wp(2), // Increased margin for better spacing
+    margin: wp(2), // Margin for spacing between cards
     maxWidth: 400, // Max card width for large screens
     minWidth: 140, // Min card width for small screens
   },
-  // Touchable card wrapper with shadow
+  // Touchable card wrapper with shadow - FIXED HEIGHT
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -169,16 +171,15 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
+    height: 260, // Fixed height for all cards - serasi dan konsisten
   },
-  // Recipe image styling with 4:5 aspect ratio (horizontal rectangle)
+  // Recipe image styling - FIXED HEIGHT, FULL WIDTH
   articleImage: {
-    width: "100%",
-    aspectRatio: 4 / 5, // Horizontal rectangle (width:height = 4:5)
-    maxHeight: 180, // Reduced max height for more compact cards
+    width: "100%", // Always full width of container (horizontal penuh)
+    height: 160, // Fixed height untuk semua gambar (tidak berubah)
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
-    resizeMode: 'cover', // Zoom image to fill container
   },
   // Recipe title text
   articleText: {
@@ -187,6 +188,7 @@ const styles = StyleSheet.create({
     color: "#52525B",
     marginHorizontal: wp(3),
     marginTop: hp(1.2),
+    numberOfLines: 2, // Max 2 lines untuk konsistensi
   },
   // Recipe description text
   articleDescription: {
@@ -195,6 +197,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(3),
     marginTop: hp(0.5),
     marginBottom: hp(1.5),
+    numberOfLines: 2, // Max 2 lines untuk konsistensi
   },
   // Row layout for multiple columns
   row: {
