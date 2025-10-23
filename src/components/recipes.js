@@ -118,10 +118,13 @@ const ArticleCard = ({ item, index, navigation }) => {
  * Defines layout, spacing, and visual appearance
  */
 const styles = StyleSheet.create({
-  // Main container with horizontal margins
+  // Main container with horizontal margins matching header
   container: {
-    marginHorizontal: wp(4),
+    marginHorizontal: wp(4), // Consistent with header padding
     marginTop: hp(2),
+    alignSelf: "center", // Center content on wide screens
+    width: "100%", // Full width on mobile
+    maxWidth: 1200, // Max width for large screens (tablets/web)
   },
   // Section title styling
   title: {
@@ -134,11 +137,12 @@ const styles = StyleSheet.create({
   loading: {
     marginTop: hp(20),
   },
-  // Individual recipe card container
+  // Individual recipe card container with max width
   cardContainer: {
     justifyContent: "center",
     marginBottom: hp(2),
-    flex: 1, // Allows flexible sizing in grid
+    flex: 1,
+    maxWidth: 300, // Max card width for large screens
   },
   // Touchable card wrapper
   card: {
@@ -146,10 +150,10 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     overflow: "hidden", // Ensures image stays within rounded corners
   },
-  // Recipe image styling with fixed aspect ratio
+  // Recipe image styling with 5:4 aspect ratio
   articleImage: {
     width: "100%",
-    aspectRatio: 1, // Square aspect ratio (1:1) for uniform appearance
+    aspectRatio: 5 / 4, // Portrait rectangle (5:4) for balanced appearance
     borderRadius: 35,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
   },
@@ -168,8 +172,9 @@ const styles = StyleSheet.create({
     marginLeft: wp(2),
     marginTop: hp(0.5),
   },
-  // Row layout for multiple columns
+  // Row layout for multiple columns with proper spacing
   row: {
     justifyContent: "space-between",
+    paddingHorizontal: wp(1), // Add internal padding for better spacing
   },
 });

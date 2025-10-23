@@ -126,9 +126,9 @@ export default function Categories({
  * Uses StyleSheet.create for performance optimization
  */
 const styles = StyleSheet.create({
-  // Padding for scroll content
+  // Padding for scroll content - consistent with header
   scrollContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: wp(4), // Match header padding for alignment
   },
   // Container for each category item
   categoryContainer: {
