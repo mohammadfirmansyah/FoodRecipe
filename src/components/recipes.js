@@ -44,11 +44,18 @@ export default function Recipe({ categories, foods }) {
   return (
     <View style={styles.container}>
       {/* 
-        Recipe Display Area
-        TODO: Implement FlatList to show filtered recipes
+        Recipe Display Grid
+        FlatList with 2 columns for efficient rendering
       */}
       <View testID="recipesDisplay">
-        {/* FlatList will be added here to render recipe cards */}
+        <FlatList
+          data={foods}
+          numColumns={2}
+          keyExtractor={(item) => item.idFood}
+          renderItem={renderItem}
+          columnWrapperStyle={styles.row}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
     </View>
   );
@@ -56,6 +63,8 @@ export default function Recipe({ categories, foods }) {
 
 /**
  * ArticleCard - Individual Recipe Card Component
+ * Displays recipe thumbnail, name, and description
+ * Clickable to navigate to recipe detail screen
  * @param {Object} item - Recipe data object
  * @param {Number} index - Position in the list
  * @param {Object} navigation - Navigation object for screen transitions
@@ -70,9 +79,34 @@ const ArticleCard = ({ item, index, navigation }) => {
       testID="articleDisplay"
     >
       {/* 
-        TODO: Add recipe image, title, and description
-        TODO: Add onPress handler to navigate to recipe detail
+        Touchable Recipe Card
+        Navigates to RecipeDetail screen on press
       */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('RecipeDetail', item)}
+      >
+        {/* Recipe Thumbnail Image */}
+        <Image
+          source={{ uri: item.recipeImage }}
+          style={[styles.articleImage, { height: index % 3 === 0 ? hp(25) : hp(35) }]}
+        />
+        
+        {/* Recipe Name */}
+        <Text style={styles.articleText}>
+          {item.recipeName.length > 20 
+            ? item.recipeName.slice(0, 20) + '...' 
+            : item.recipeName
+          }
+        </Text>
+        
+        {/* Recipe Description */}
+        <Text style={styles.articleDescription}>
+          {item.recipeDescription?.length > 30
+            ? item.recipeDescription.slice(0, 30) + '...'
+            : item.recipeDescription
+          }
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
