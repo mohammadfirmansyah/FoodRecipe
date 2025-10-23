@@ -45,9 +45,20 @@ export default function MyRecipeScreen() {
    */
   useEffect(() => {
     const fetchrecipes = async () => {
-      // TODO: Retrieve recipes from AsyncStorage
-      // TODO: Parse JSON and set to state
-      // TODO: Set loading to false
+      try {
+        // Retrieve recipes from AsyncStorage using key "customrecipes"
+        const storedrecipes = await AsyncStorage.getItem("customrecipes");
+        
+        // Check if recipes exist, parse JSON and update state
+        if (storedrecipes) {
+          setrecipes(JSON.parse(storedrecipes));
+        }
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      } finally {
+        // Set loading to false after fetch completes
+        setLoading(false);
+      }
     };
 
     fetchrecipes();
@@ -58,7 +69,8 @@ export default function MyRecipeScreen() {
    * Navigates to form screen for creating new recipe
    */
   const handleAddrecipe = () => {
-    // TODO: Navigate to RecipesFormScreen
+    // Navigate to RecipesFormScreen to add new recipe
+    navigation.navigate("RecipesFormScreen");
   };
 
   /**
@@ -66,7 +78,8 @@ export default function MyRecipeScreen() {
    * Opens detailed view of selected recipe
    */
   const handlerecipeClick = (recipe) => {
-    // TODO: Navigate to CustomRecipesScreen with recipe data
+    // Navigate to CustomRecipesScreen with recipe data as parameter
+    navigation.navigate("CustomRecipesScreen", { recipe });
   };
 
   /**
@@ -74,9 +87,21 @@ export default function MyRecipeScreen() {
    * Removes recipe from AsyncStorage by index
    */
   const deleterecipe = async (index) => {
-    // TODO: Filter out recipe at given index
-    // TODO: Update AsyncStorage
-    // TODO: Update state
+    try {
+      // Create a copy of the recipes array
+      const updatedrecipes = [...recipes];
+      
+      // Remove recipe at specified index (removes 1 element)
+      updatedrecipes.splice(index, 1);
+      
+      // Update AsyncStorage with new recipes array
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(updatedrecipes));
+      
+      // Update component state with new recipes
+      setrecipes(updatedrecipes);
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
   };
 
   /**
@@ -84,7 +109,11 @@ export default function MyRecipeScreen() {
    * Opens form screen in edit mode with pre-filled data
    */
   const editrecipe = (recipe, index) => {
-    // TODO: Navigate to RecipesFormScreen with edit params
+    // Navigate to RecipesFormScreen with recipe data and index for editing
+    navigation.navigate("RecipesFormScreen", {
+      recipeToEdit: recipe,
+      recipeIndex: index,
+    });
   };
 
   return (
@@ -128,15 +157,25 @@ export default function MyRecipeScreen() {
                   testID="handlerecipeBtn" 
                   onPress={() => handlerecipeClick(recipe)}
                 >
+                  {/* Recipe Image - Display if available */}
+                  {recipe.image && (
+                    <Image 
+                      source={{ uri: recipe.image }} 
+                      style={styles.recipeImage} 
+                    />
+                  )}
+                  
                   {/* Recipe Title */}
                   <Text style={styles.recipeTitle}>{recipe.title}</Text>
                   
-                  {/* Recipe Description */}
+                  {/* Recipe Description - Show first 50 characters */}
                   <Text 
                     style={styles.recipeDescription} 
                     testID="recipeDescp"
                   >
-                    {/* TODO: Display recipe description */}
+                    {recipe.description && recipe.description.length > 50
+                      ? recipe.description.substring(0, 50) + "…"
+                      : recipe.description}
                   </Text>
                 </TouchableOpacity>
 
@@ -145,8 +184,21 @@ export default function MyRecipeScreen() {
                   style={styles.actionButtonsContainer} 
                   testID="editDeleteButtons"
                 >
-                  {/* TODO: Add Edit button */}
-                  {/* TODO: Add Delete button */}
+                  {/* Edit Button - Opens form with pre-filled data */}
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => editrecipe(recipe, index)}
+                  >
+                    <Text style={styles.editButtonText}>Edit</Text>
+                  </TouchableOpacity>
+                  
+                  {/* Delete Button - Removes recipe from storage */}
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => deleterecipe(index)}
+                  >
+                    <Text style={styles.deleteButtonText}>Delete</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             ))
