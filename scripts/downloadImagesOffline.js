@@ -36,7 +36,7 @@ const categoryImages = [
   { name: 'vegan', url: 'https://www.themealdb.com/images/category/vegan.png' },
   { name: 'vegetarian', url: 'https://www.themealdb.com/images/category/vegetarian.png' },
   { name: 'breakfast', url: 'https://www.themealdb.com/images/category/breakfast.png' },
-  { name: 'goat', url: 'https://images.unsplash.com/photo-1619711667542-c049700dd9e0?q=80&w=400' },
+  { name: 'goat', url: 'https://www.themealdb.com/images/category/lamb.png' }, // Use lamb as placeholder for goat
 ];
 
 // Recipe images to download - All 14 recipes
